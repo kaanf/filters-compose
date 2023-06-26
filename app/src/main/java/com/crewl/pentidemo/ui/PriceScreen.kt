@@ -1,8 +1,10 @@
 package com.crewl.pentidemo.ui
 
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -13,16 +15,17 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
-import com.crewl.pentidemo.components.RangeSlider
+import com.crewl.pentidemo.components.PriceSeekbar
 
 @Composable
 fun PriceScreen(navigator: NavHostController = rememberNavController()) {
     Box(
         modifier = Modifier
-            .fillMaxSize(),
-        contentAlignment = Alignment.Center
+            .fillMaxSize()
+            .padding(top = 140.dp),
+        contentAlignment = Alignment.TopCenter
     ) {
-        RangeSlider(
+        PriceSeekbar(
             modifier = Modifier
                 .padding(horizontal = 32.dp)
                 .fillMaxWidth(),
@@ -35,10 +38,9 @@ fun PriceScreen(navigator: NavHostController = rememberNavController()) {
             tooltipSpacing = 10.dp,
             tooltipWidth = 40.dp,
             tooltipHeight = 30.dp,
-            cornerRadius = CornerRadius(32f, 32f),
-            tooltipTriangleSize = 8.dp,
+            cornerRadius = CornerRadius(32f, 32f)
         ) { _, _ ->
-
+            /* Empty. */
         }
     }
 }

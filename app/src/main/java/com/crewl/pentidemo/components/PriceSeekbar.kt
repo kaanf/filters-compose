@@ -29,7 +29,7 @@ import kotlin.math.sqrt
 
 @OptIn(ExperimentalComposeUiApi::class, ExperimentalTextApi::class)
 @Composable
-fun RangeSlider(
+fun PriceSeekbar(
     modifier: Modifier,
     rangeColor: Color,
     backColor: Color,
@@ -41,7 +41,6 @@ fun RangeSlider(
     tooltipSpacing: Dp,
     tooltipWidth: Dp,
     tooltipHeight: Dp,
-    tooltipTriangleSize: Dp,
     onProgressChanged: (progress1: Float, progress2: Float) -> Unit
 ) {
 
