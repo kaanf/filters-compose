@@ -62,13 +62,15 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavHostController
 import com.crewl.pentidemo.R
+import com.crewl.pentidemo.nav.SetupNavigationGraph
 
 @Composable
-fun ProductListDrawerMenu(closeDrawer: () -> Unit = {}) {
+fun ProductListDrawerMenu(navHostController: NavHostController, closeDrawer: () -> Unit = {}) {
     Column(
         modifier = Modifier
-            .fillMaxWidth()
+            .fillMaxSize()
             .padding(start = 110.dp)
             .background(Color.White),
         verticalArrangement = Arrangement.SpaceBetween
@@ -86,11 +88,7 @@ fun ProductListDrawerMenu(closeDrawer: () -> Unit = {}) {
                     .height(1.dp)
             )
 
-            val items = getItemContent()
-
-            ProductListDrawerBody(items = items, onItemClicked = {
-                /* Set click method to items. */
-            })
+            SetupNavigationGraph(navController = navHostController)
         }
 
         Divider(
@@ -102,22 +100,6 @@ fun ProductListDrawerMenu(closeDrawer: () -> Unit = {}) {
 
         ProductListDrawerFooter()
     }
-}
-
-private fun getItemContent(): List<DrawerContent> {
-    return listOf(
-        DrawerContent(title = "Beden", imageVector = Icons.Default.Home, false),
-        DrawerContent(title = "Fiyat", imageVector = Icons.Default.Home, false),
-        DrawerContent(title = "Renk", imageVector = Icons.Default.Home, false),
-        DrawerContent(title = "Kumaş", imageVector = Icons.Default.Home, false),
-        DrawerContent(title = "Balen", imageVector = Icons.Default.Home, false),
-        DrawerContent(title = "Dolgu", imageVector = Icons.Default.Home, false),
-        DrawerContent(title = "Denye", imageVector = Icons.Default.ShoppingCart, false),
-        DrawerContent(title = "Cinsiyet", imageVector = Icons.Default.ShoppingCart, false),
-        DrawerContent(title = "Stokta", imageVector = Icons.Default.ShoppingCart, true),
-        DrawerContent(title = "İndirimde", imageVector = Icons.Default.ShoppingCart, true),
-        DrawerContent(title = "Sürdürülebilir", imageVector = Icons.Default.ShoppingCart, true),
-    )
 }
 
 @Composable
@@ -150,109 +132,6 @@ fun ProductListDrawerFooter(onButtonClicked: () -> Unit = {}) {
             .height(40.dp)
             .background(Color.White))
     }
-}
-
-
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-fun ProductListDrawerHeader(onActionClick: () -> Unit = {}, isDrawerMenuNavigated: Boolean) {
-    CenterAlignedTopAppBar(
-        modifier = Modifier
-            .background(Color.White),
-        colors = TopAppBarDefaults.smallTopAppBarColors(containerColor = Color.White),
-        title = { Text(text = "Filtreler", style = TextStyle(color = Color(0xff81819b), fontSize = 18.sp)) },
-        navigationIcon = {
-            IconButton(onClick = onActionClick) {
-                Icon(
-                    imageVector = Icons.Default.Close,
-                    contentDescription = "Icon for close drawer menu.",
-                    tint = MaterialTheme.colorScheme.onSurface
-                )
-            }
-        },
-        actions = {
-            if (isDrawerMenuNavigated)
-                IconButton(onClick = onActionClick) {
-                    Icon(
-                        imageVector = Icons.Default.Delete,
-                        contentDescription = "Remove selected filters.",
-                        tint = MaterialTheme.colorScheme.onSurface
-                    )
-                }
-        },
-    )
-}
-
-@Composable
-fun ProductListDrawerBody(items: List<DrawerContent>, onItemClicked: (DrawerContent) -> Unit) {
-    LazyColumn {
-        itemsIndexed(items) { index, item ->
-            ProductListDefaultDrawerItem(item = item, onItemClicked)
-
-            if (index < items.lastIndex)
-                Divider(color = Color.White, thickness = 1.dp)
-        }
-    }
-}
-
-@Composable
-fun ProductListDefaultDrawerItem(
-    item: DrawerContent,
-    onItemClicked: (DrawerContent) -> Unit
-) {
-    var isChecked by remember {
-        mutableStateOf(false)
-    }
-
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .background(if (isChecked) Color(0xfffaf0f4) else Color.White)
-            .padding(horizontal = 8.dp, vertical = 8.dp)
-            .clickable {
-                onItemClicked.invoke(item)
-            },
-        horizontalArrangement = Arrangement.SpaceBetween,
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        Text(text = item.title, style = TextStyle(color = Color(0xff29335c), fontSize = 15.sp), modifier = Modifier.padding(8.dp))
-
-        if (item.isCheckable)
-            Card(
-                modifier = Modifier
-                    .padding(horizontal = 4.dp),
-                shape = RoundedCornerShape(4.dp),
-                border = BorderStroke(1.25.dp, color = Color(0xfffa5373))
-            ) {
-                Box(
-                    modifier = Modifier
-                        .background(if (isChecked) Color(0xfffaf0f4) else Color.White)
-                        .size(20.dp)
-                        .clickable {
-                            isChecked = !isChecked
-                        },
-                    contentAlignment = Alignment.Center
-                ) {
-                    if (isChecked)
-                        Icon(Icons.Default.Check, contentDescription = "", tint = Color(0xfffa5373), modifier = Modifier.padding(4.dp))
-                }
-            }
-        else
-            Image(
-                painterResource(R.drawable.icons_keyboard_arrow),
-                contentDescription = "",
-                contentScale = ContentScale.Crop,
-                modifier = Modifier
-                    .size(20.dp)
-                    .padding(end = 4.dp)
-            )
-    }
-}
-
-@Preview
-@Composable
-fun ProductListDrawerHeaderPreview() {
-    ProductListDrawerMenu()
 }
 
 data class DrawerContent(

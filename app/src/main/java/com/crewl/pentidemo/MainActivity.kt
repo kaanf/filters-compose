@@ -54,17 +54,24 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
+import com.crewl.pentidemo.nav.SetupNavigationGraph
 import com.crewl.pentidemo.ui.ProductListDrawerMenu
 import com.crewl.pentidemo.ui.theme.PentiDemoTheme
 import kotlinx.coroutines.launch
 
 class MainActivity : ComponentActivity() {
+
+    private lateinit var navHostController: NavHostController
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
             PentiDemoTheme {
                 Surface(modifier = Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background) {
-                    DrawerAppComponent()
+                    navHostController = rememberNavController()
+                    DrawerAppComponent(navHostController)
                 }
             }
         }
@@ -73,19 +80,18 @@ class MainActivity : ComponentActivity() {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun DrawerAppComponent() {
+fun DrawerAppComponent(navController: NavHostController) {
     val drawerState = rememberDrawerState(DrawerValue.Closed)
     val scope = rememberCoroutineScope()
 
     RightModalDrawer(
         drawerState = drawerState,
         drawerContent = {
-            ProductListDrawerMenu()
+            ProductListDrawerMenu(navHostController = navController)
         }
     ) {
         Scaffold { scaffoldPaddingValues ->
             Column(modifier = Modifier.padding(scaffoldPaddingValues)) {
-                Text(text = "Content text")
                 Button(onClick = { scope.launch { drawerState.open() } }) {
                     Text(text = "Open Right Modal")
                 }
@@ -122,7 +128,7 @@ fun AppBar(
 fun RightModalDrawer(
     modifier: Modifier = Modifier,
     drawerState: DrawerState = rememberDrawerState(DrawerValue.Closed),
-    gesturesEnabled: Boolean = true,
+    gesturesEnabled: Boolean = false,
     scrimColor: Color = DrawerDefaults.scrimColor,
     drawerContent: @Composable ColumnScope.() -> Unit,
     content: @Composable () -> Unit,
@@ -154,5 +160,4 @@ fun RightModalDrawer(
 @Preview(showBackground = true)
 @Composable
 fun GreetingPreview() {
-    DrawerAppComponent()
 }
